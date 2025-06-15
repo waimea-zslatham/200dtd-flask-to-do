@@ -34,7 +34,6 @@ def show_all_things():
         # And show them on the page
         return render_template("pages/home.jinja", things=things)
 
-
 #-----------------------------------------------------------
 # Thing page route - Show details of a single thing
 #-----------------------------------------------------------
@@ -42,15 +41,15 @@ def show_all_things():
 def show_one_thing(id):
     with connect_db() as client:
         # Get the thing details from the DB
-        sql = "SELECT priority, name FROM tasks WHERE id=(?,?)"
-        values = [id]
+        sql = "SELECT name, priority FROM tasks WHERE id=(?,?)"
+        values = []
         result = client.execute(sql, values)
 
         # Did we get a result?
         if result.rows:
             # yes, so show it on the page
             thing = result.rows[0]
-            return render_template("pages/things.jinja", thing=thing)
+            return render_template("pages/thing.jinja", thing=thing)
 
         else:
             # No, so show error
@@ -69,10 +68,9 @@ def add_a_thing():
     # Sanitise the inputs
     name = html.escape(name)
     priority = html.escape(priority)
-
     with connect_db() as client:
         # Add the thing to the DB
-        sql = "INSERT INTO tasks (name, price) VALUES (?, ?)"
+        sql = "INSERT INTO tasks (name, priority) VALUES (?, ?)"
         values = [name, priority]
         client.execute(sql, values)
 
@@ -90,6 +88,7 @@ def delete_a_thing(id):
         sql = "DELETE FROM tasks WHERE id=?"
         values = [id]
         client.execute(sql, values)
+        
 
         # Go back to the home page
         flash("Thing deleted", "warning")

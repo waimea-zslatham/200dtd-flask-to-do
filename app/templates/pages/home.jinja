@@ -57,15 +57,18 @@
                 type="number"
                 name="priority"
                 min="0"
-                placeholder="Priority of task"
+                placeholder="priority of task"
                 required
             >
 
-            <button>Add the Task</button>
+            <button>Add the Thing</button>
+                <a role="button" href="/delete/<int:id>">Delete</a>
+             </form>
+
 
         </form>
+            <a role="button" href="/">Back to List</a>
 
     </article>
 
 {% endblock %}
-
