@@ -9,32 +9,37 @@
 
 {% block title %}
 
-    Flask Demo - All Things
+    Awesome to do App
 
 {% endblock %}
 
 
 {% block content %}
 
-    <h1>Things...</h1>
-
-
     <article>
 
         <ul>
-            {% for thing in things %}
+            {% for task in tasks %}
 
-                <li>
-                    <a href="/thing/{{ thing.id }}">
-                        {{ thing.name }}
-                    </a>
-                </li>
+            <li class="tasks">
 
+            {{ task.priority }}
+
+            {{ task.name }}
+
+            {% if task.complete %}
+                <a href="/incomplete/{{ task.id }}">🗹</a>
+                <a href="/delete/{{ task.id }}"></a>
             {% else %}
+                <a href="/complete/{{ task.id }}">☐</a>
+            {% endif %}
+            </li>
 
-                <p>None!</p>
+        {% else %}
 
-            {% endfor %}
+            <p>None!</p>
+
+        {% endfor %}
         </ul>
 
     </article>
@@ -57,6 +62,7 @@
                 type="number"
                 name="priority"
                 min="0"
+                max="10"
                 placeholder="priority of task"
                 required
             >

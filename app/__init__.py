@@ -27,33 +27,14 @@ register_error_handlers(app)
 def show_all_things():
     with connect_db() as client:
         # Get all the things from the DB
-        sql = "SELECT priority, name FROM tasks ORDER BY priority DESC"
+        sql = "SELECT id, name, priority, complete FROM tasks ORDER BY priority ASC"
         result = client.execute(sql)
-        things = result.rows
+        tasks = result.rows
 
         # And show them on the page
-        return render_template("pages/home.jinja", things=things)
+        return render_template("pages/home.jinja", tasks=tasks)
 
-#-----------------------------------------------------------
-# Thing page route - Show details of a single thing
-#-----------------------------------------------------------
-@app.get("/thing/<int:id>")
-def show_one_thing(id):
-    with connect_db() as client:
-        # Get the thing details from the DB
-        sql = "SELECT name, priority FROM tasks WHERE id=(?,?)"
-        values = []
-        result = client.execute(sql, values)
 
-        # Did we get a result?
-        if result.rows:
-            # yes, so show it on the page
-            thing = result.rows[0]
-            return render_template("pages/thing.jinja", thing=thing)
-
-        else:
-            # No, so show error
-            return not_found_error()
 
 
 #-----------------------------------------------------------
@@ -79,17 +60,42 @@ def add_a_thing():
         return redirect("/")
 
 #-----------------------------------------------------------
-# Route for deleting a thing, Id given in the route
+# Route for deleting a task, Id given in the route
 #-----------------------------------------------------------
 @app.get("/delete/<int:id>")
-def delete_a_thing(id):
+def delete_task(id):
     with connect_db() as client:
-        # Delete the thing from the DB
+        # Delete the task from the DB
         sql = "DELETE FROM tasks WHERE id=?"
         values = [id]
         client.execute(sql, values)
-        
 
         # Go back to the home page
-        flash("Thing deleted", "warning")
-        return redirect("/things")
+        return redirect("/")
+    
+#---------------------------------------------------------------
+ #Route for Complete tasks
+#---------------------------------------------------------------
+@app.get("/complete/<int:id>")
+def complete_task(id):
+    with connect_db() as client:
+        sql = "UPDATE tasks set complete=? WHERE id=?"
+        values = [1, id]
+        client.execute(sql, values)
+        
+
+        #Go back to home
+        return redirect("/")
+
+#--------------------------------------------------------
+#Route for Incomplete tasks
+#--------------------------------------------------------
+@app.get("/incomplete/<int:id>")
+def incomplete_task(id):
+    with connect_db() as client:
+        sql = "UPDATE tasks set complete=? WHERE id=?"
+        values = [0, id]
+        client.execute(sql, values)
+
+        #Go back to home
+        return redirect("/")
