@@ -29,12 +29,13 @@
 
             {% if task.complete %}
                 <a href="/incomplete/{{ task.id }}">🗹</a>
-                <a href="/delete/{{ task.id }}"></a>
             {% else %}
                 <a href="/complete/{{ task.id }}">☐</a>
             {% endif %}
+                <a href="/delete/{{ task.id }}">
+                        Delete
+                    </a>
             </li>
-
         {% else %}
 
             <p>None!</p>
@@ -54,7 +55,7 @@
             <input
                 type="text"
                 name="name"
-                placeholder="name of task"
+                placeholder="Name of task"
                 required
             >
 
@@ -62,18 +63,16 @@
                 type="number"
                 name="priority"
                 min="0"
-                max="10"
-                placeholder="priority of task"
+                max="5"
+                placeholder="Priority of task"
                 required
             >
 
             <button>Add the Thing</button>
-                <a role="button" href="/delete/<int:id>">Delete</a>
              </form>
 
 
         </form>
-            <a role="button" href="/">Back to List</a>
 
     </article>
 
